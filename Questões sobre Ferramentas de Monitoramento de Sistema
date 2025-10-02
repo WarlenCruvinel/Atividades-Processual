@@ -1,0 +1,127 @@
+1. Comparação de Finalidade e Acesso
+Finalidade:
+•	Monitor de Atividade (macOS) e Gerenciador de Tarefas (Windows):
+Ferramentas gráficas voltadas ao usuário final, com foco em visualização rápida de uso de CPU, memória, disco, rede e processos.
+•	top (Linux):
+Ferramenta de linha de comando, voltada a administradores e usuários avançados, com foco em monitoramento em tempo real e com maior controle via teclado.
+Forma de acesso:
+•	Monitor de Atividade (macOS):
+Finder > Aplicativos > Utilitários > Monitor de Atividade
+ou buscar via Spotlight (Cmd + Barra de Espaço > "Monitor de Atividade")
+•	Gerenciador de Tarefas (Windows):
+Ctrl + Shift + Esc ou Ctrl + Alt + Del > "Gerenciador de Tarefas"
+•	top (Linux):
+Terminal > digitar top
+Alinhamento:
+O Gerenciador de Tarefas se alinha ao Monitor de Atividade por serem ambos gráficos e interativos, ideais para uso em desktops. O top é mais comum em ambientes de servidor por sua leveza e acesso via terminal.
+________________________________________
+ 2. Monitoramento de CPU
+macOS (Monitor de Atividade):
+1.	Abrir Monitor de Atividade.
+2.	Clicar na aba "CPU".
+3.	Ordenar por "% CPU" clicando no cabeçalho da coluna.
+4.	O processo no topo está consumindo mais CPU.
+Windows (Gerenciador de Tarefas):
+1.	Abrir Gerenciador de Tarefas.
+2.	Ir na aba "Processos".
+3.	Clicar na coluna CPU para ordenar.
+4.	Ver o processo que mais consome CPU no topo.
+Linux (top):
+1.	Abrir terminal.
+2.	Rodar top.
+3.	Ver coluna %CPU.
+4.	Pressionar P (opcional) para ordenar por uso de CPU.
+________________________________________
+ 3. Análise de Memória
+Monitor de Atividade / Gerenciador de Tarefas:
+•	Exibem:
+o	Uso de memória física
+o	Swap (paginação)
+o	Memória por processo
+o	Detalhes como memória comprimida (no macOS)
+top (Linux):
+•	Exibe no topo:
+o	KiB Mem: memória RAM total, usada, livre.
+o	KiB Swap: uso de espaço de troca (swap).
+•	Por processo:
+o	Colunas importantes: RES (resident), VIRT (virtual), SHR (compartilhada).
+Métricas relevantes:
+•	RES (Resident memory): Memória RAM realmente usada.
+•	VIRT (Virtual memory): Inclui swap e mmap — nem sempre indica uso real.
+•	%MEM: Percentual de memória usada pelo processo em relação à RAM total.
+________________________________________
+ 4. Processos e PIDs
+Importância do PID:
+•	Cada processo é identificado por um Process ID (PID) único.
+•	Útil para monitoramento, depuração e encerramento forçado de processos.
+Exibição:
+•	Monitor de Atividade: Coluna “PID”.
+•	Gerenciador de Tarefas: Ativar coluna PID nas opções de visualização.
+•	top: Coluna PID padrão.
+Encerrar processo via PID:
+•	macOS (Terminal):
+•	kill <PID>      # Encerrar educadamente
+•	kill -9 <PID>   # Forçar encerramento
+•	Windows (Prompt de comando):
+•	taskkill /PID <PID> /F
+•	Linux (Terminal):
+•	kill <PID>      # Encerrar normalmente
+•	kill -9 <PID>   # Forçar encerramento
+________________________________________
+ 5. Diferença na Interface
+Ferramenta	Interface Gráfica	Texto/CLI	Navegação por Teclado
+Monitor de Atividade	✅ Sim	❌ Não	⛔ Limitado
+Gerenciador de Tarefas	✅ Sim	❌ Não	⛔ Limitado
+top	❌ Não	✅ Sim	✅ Totalmente via teclado
+•	Mais visual: Monitor de Atividade e Gerenciador de Tarefas
+•	Mais orientado a comandos: top (totalmente texto)
+________________________________________
+ 6. Monitoramento de Rede
+Monitor de Atividade (macOS):
+•	Aba "Rede"
+•	Exibe: Bytes recebidos/enviados por processo
+Gerenciador de Tarefas (Windows):
+•	Aba "Desempenho" > Rede
+•	Coluna "Rede" na aba "Processos"
+•	Mostra uso de rede por processo, mas com menos profundidade
+Linux:
+•	nethogs: mostra uso de rede por processo
+•	sudo nethogs
+•	iftop, ip -s link e ss também são úteis
+________________________________________
+ 7. Análise de Disco
+Monitor de Atividade (macOS):
+•	Aba "Disco"
+•	Exibe: Leitura/gravação em tempo real por processo
+Gerenciador de Tarefas (Windows):
+•	Aba "Processos": coluna "Disco"
+•	Aba "Desempenho": detalhes do disco em geral
+Linux:
+•	top sozinho não mostra I/O de disco.
+•	Use:
+o	iotop (requer root)
+o	sudo iotop
+o	iostat (via pacote sysstat)
+o	iostat -dx 1
+Importância:
+•	Detectar gargalos em I/O de disco, que afetam desempenho de servidores e bancos de dados.
+________________________________________
+ 8. Hierarquia de Processos
+Monitor de Atividade / Gerenciador de Tarefas:
+•	Não mostram claramente a hierarquia de processos (pais e filhos)
+•	Exibem processos em lista plana
+top (Linux):
+•	Pode usar top -H para ver threads.
+•	Melhor alternativa: htop (interface em terminal com árvore)
+•	sudo apt install htop
+•	htop
+o	Pressione F5 para ver a árvore de processos
+________________________________________
+ 9. Uso em Servidores vs. Desktops
+Desktops (com interface gráfica):
+•	Monitor de Atividade (macOS)
+•	Gerenciador de Tarefas (Windows)
+✅ Fáceis de usar, visualmente ricos, sem necessidade de conhecimento técnico profundo.
+Servidores (sem GUI):
+•	top (Linux) (e complementares como htop, iotop, nethogs)
+✅ Leves, funcionam em terminal, não dependem de interface gráfica, ideais para acesso remoto via SSH
