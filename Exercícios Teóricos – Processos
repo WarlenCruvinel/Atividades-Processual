@@ -1,0 +1,91 @@
+1. Diferença entre programa e processo
+•	Programa: é um arquivo estático com instruções armazenadas (código).
+•	Processo: é o programa em execução, com contexto próprio (variáveis, memória, registradores, estado).
+ Exemplo: o executável calc.exe é um programa; quando você o abre, o SO cria um processo.
+________________________________________
+2. Estados de um processo e transições
+Estados principais:
+1.	Novo (New) → quando está sendo criado.
+2.	Pronto (Ready) → aguardando CPU.
+3.	Executando (Running) → está usando a CPU.
+4.	Bloqueado (Waiting) → esperando evento (ex.: E/S terminar).
+5.	Terminado (Exit) → finalizou.
+Transições:
+•	New → Ready: processo criado pelo SO.
+•	Ready → Running: escalonador escolhe o processo.
+•	Running → Ready: preempção (tempo da CPU acabou).
+•	Running → Waiting: precisa esperar E/S ou outro evento.
+•	Waiting → Ready: evento/E/S concluída.
+•	Running → Exit: processo termina.
+________________________________________
+3. Conteúdo do PCB (Process Control Block)
+Estrutura de dados mantida pelo SO que guarda informações do processo:
+•	Identificação: PID, PPID.
+•	Estado do processo.
+•	Contexto de CPU (registradores, contador de programa, flags).
+•	Informações de escalonamento (prioridade, fila).
+•	Informações de memória (tabelas de páginas, limites).
+•	Informações de E/S (arquivos abertos, dispositivos).
+________________________________________
+4. O que acontece com os recursos de um processo quando ele termina?
+•	Memória alocada é liberada.
+•	Arquivos abertos são fechados.
+•	PCB é destruído.
+•	Recursos de E/S são devolvidos ao sistema.
+•	Filhos podem virar processos órfãos ou zumbis até o pai coletar seu status.
+________________________________________
+5. Diferença entre fork() e exec() no UNIX
+•	fork(): cria um novo processo (filho), cópia do pai.
+•	exec(): substitui o conteúdo do processo atual por um novo programa (não cria processo novo).
+ Geralmente: fork() cria filho → filho chama exec() para rodar outro programa.
+________________________________________
+6. Hierarquia de processos em UNIX
+•	Todo processo é criado por outro (exceto o init/systemd).
+•	Relação pai-filho (PPID).
+•	Se o pai morre, o processo filho é adotado pelo init.
+•	O pai pode usar wait() para coletar o status de término do filho.
+________________________________________
+7. Memória compartilhada vs. Troca de mensagens (IPC)
+•	Memória compartilhada: processos acessam a mesma região de memória → rápido, mas exige sincronização (semáforos, mutexes).
+•	Troca de mensagens: processos enviam/recebem mensagens via sistema operacional → mais seguro, mas mais lento.
+________________________________________
+8. Exemplos de chamadas de sistema usadas em IPC
+•	Memória compartilhada: shmget(), shmat(), shmdt().
+•	Mensagens: msgget(), msgsnd(), msgrcv().
+•	Pipes: pipe(), read(), write().
+•	Sockets: socket(), send(), recv().
+________________________________________
+9. Importância do gerenciamento de processos pelo SO
+•	Garante compartilhamento justo da CPU.
+•	Isola processos, evitando interferências.
+•	Faz comunicação e sincronização entre processos.
+•	Evita deadlocks e conflitos de recursos.
+•	Fornece multitarefa e responsividade ao sistema.
+________________________________________
+10. Diferença entre processos independentes e cooperativos
+•	Independentes: não compartilham dados/estado; execução não afeta outros.
+•	Cooperativos: compartilham informações e podem afetar ou depender de outros (ex.: processos que comunicam via memória compartilhada).
+________________________________________
+11. Processo zumbi em UNIX/Linux
+•	Processo que terminou, mas cujo pai ainda não chamou wait() para coletar seu status.
+•	Ocupa apenas o PCB na tabela de processos.
+________________________________________
+12. Chamadas bloqueantes vs. não bloqueantes em IPC
+•	Bloqueante: o processo fica esperando até a operação terminar (ex.: recv() espera mensagem).
+•	Não bloqueante: retorna imediatamente, mesmo que a operação não esteja completa (processo continua executando).
+________________________________________
+13. Diferença entre processo pesado (process) e thread (processo leve)
+•	Processo (pesado): tem espaço de memória independente, maior custo de criação e troca de contexto.
+•	Thread (leve): compartilha memória do processo, criação e troca de contexto mais rápida.
+________________________________________
+14. Por que multiprogramação exige troca de contexto?
+•	Porque vários processos compartilham a CPU.
+•	O SO precisa salvar o contexto de um processo (registradores, contador de programa) e restaurar o de outro para que a execução seja retomada corretamente.
+________________________________________
+15. Vantagens e desvantagens da memória compartilhada
+Vantagens:
+•	Comunicação rápida (não passa pelo SO o tempo todo).
+•	Boa para grande volume de dados.
+Desvantagens:
+•	Necessidade de sincronização manual (semáforos, mutex).
+•	Mais suscetível a erros de concorrência (race conditions).
